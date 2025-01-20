@@ -1,58 +1,71 @@
 #include<iostream>
 using namespace std;
 
-const int MAX_NODES=100;
-const int MAX_CHILD=10;
-
-string nodeName[MAX_NODES];
-int children[MAX_NODES][MAX_CHILD];
-int childCount[MAX_NODES]={0};
-int nodeCount=0;
-
-int addNode(const string &name)
+class Node
 {
-  nodeName[nodeCount]=name;
-  return nodeCount++;
- }
+public:
+
+ string data;
+ Node *children[10];
+ int childCount;
  
- void addChild(int parent,int child)
- {
-   children[parent][childCount[parent]]=child;
-   childCount[parent]++;
+  public:
+  
+   Node(const string &value)
+   {
+     data=value;
+     childCount=0;
+     for(int i=0;i<10;i++)
+     {
+        children[i]=nullptr;
+     }
+   }
    
- }
- 
- void printTree(int nodeIndex,string prefix="")
- {
- cout<<prefix<<nodeName[nodeIndex]<<endl;
- for(int i=0;i<childCount[nodeIndex];i++)
- {
- printTree(children[nodeIndex][i],prefix + " ");
- }
- }
- int main()
- {
-   int book=addNode("Book");
-   int chapter1=addNode("Chapterc 1");
-   int chapter2=addNode("Chapterc 2");
-   int section1=addNode("Section  1.1");
-   int section2=addNode("Section  1.2");
-   
-   int subsection1=addNode("Subsection 1.1.1");
-   
-   
-   addChild(book,chapter1);
-   addChild(book,chapter2);
-   addChild(chapter1,section1);
-   addChild(chapter1,section2);
-   addChild(section1,subsection1);
-   
-  printTree(book);
-  return 0;
-  } 
-   
-   
-   
+    void addChild(Node* child)
+    {
+      if(childCount<10)
+      {
+         children[childCount++]=child;
+      }
+    }
     
-    
+    void printTree(int level=0)
+    {
+      for(int i=0;i<level;i++)cout<<" ";
+      cout<<data<<endl;
+      for(int i=0;i<childCount;i++)
+      {
+        children[i]->printTree(level+1);
+      }
+   }
+   };
+   int main()
+   {
+     Node* book=new Node("BOOK");
+     
+     Node* chapter1=new Node("CHAPTER1");
+      Node* chapter2=new Node("CHAPTER2");
+      
+      book->addChild(chapter1);
+      book->addChild(chapter2);
+      
+       Node* section1=new Node("SECTION1");
+      Node* section2=new Node("SECTION2");
+      
+      chapter1->addChild(section1);
+      chapter1->addChild(section2);
+      
+      Node* sub_section1=new Node("SUB_SECTION1");
+      Node* sub_section2=new Node("SUB_SECTION2");
+      
+      section1->addChild(sub_section1);
+      section1->addChild(sub_section2);
+      
+      cout<<"Tree Structure:"<<endl;
+      book->printTree();
+      
+      return 0;
+      }
+      
+      
    
